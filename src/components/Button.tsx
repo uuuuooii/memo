@@ -8,6 +8,15 @@ const Button = styled.button`
     border: none;
     font-size: 12px;
     color: white;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #0e3a60;
+    }
+
+    /* .a & {
+        background-color: red;
+    } */
 
 `
 

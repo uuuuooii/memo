@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 import Card from "./components/Card";
 import Edit from "./components/Edit";
+import Memo from "./interfaces/Memo";
 
 
 const CardContainer = styled.div`
@@ -26,6 +27,7 @@ const PlusCard = styled.div`
 
 const App = () => {
   const [mode, setMode] = useState<'edit' | 'view'>('view')
+  const [memoList, setMemoList] = useState<Memo[]>([])
 
   return (
     <>
@@ -50,20 +52,15 @@ const App = () => {
       {
         mode === "view" &&
         < CardContainer >
-          <Card title='hello' />
-          <Card title='hello' />
-          <Card title='hello' />
-          <Card title='hello' />
-          <Card title='hello' />
-          <Card title='hello' />
-          <Card title='hello' />
-          <Card title='hello' />
+          {
+            memoList.map(memo => <Card title={memo.title} />)
+          }
           <PlusCard onClick={() => setMode("edit")} >+</PlusCard>
         </ CardContainer >
       }
       {
         mode === "edit" &&
-        <Edit />
+        <Edit setMode={setMode} />
       }
     </>
 
