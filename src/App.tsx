@@ -1,16 +1,17 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 import Card from "./components/Card";
 import Edit from "./components/Edit";
 import Memo from "./interfaces/Memo";
-
 
 const CardContainer = styled.div`
   display: flex;
   gap: 40px;
   flex-wrap: wrap;
   align-items: center;
-`
+ `
+
 const PlusCard = styled.div`
   display: flex;
   align-items: center;
@@ -24,31 +25,21 @@ const PlusCard = styled.div`
   margin: 80px;
 `
 
-
 const App = () => {
+  console.log(Cookies.get('memo'))
+
   const [mode, setMode] = useState<'edit' | 'view'>('view')
   const [memoList, setMemoList] = useState<Memo[]>([])
+  const [selectedMemo, setSelectedMemo] = useState<Memo | null>(null)
+
+  useEffect(() => {
+    const memo = JSON.parse((Cookies.get('memo') ?? null)!)
+    const memoList: Memo[] = memo ?? [];
+    setMemoList(memoList)
+  }, [mode])
 
   return (
     <>
-      {/* {
-        mode === "view" ?
-          < CardContainer >
-            <Card title='hello' />
-            <Card title='hello' />
-            <Card title='hello' />
-            <Card title='hello' />
-            <Card title='hello' />
-            <Card title='hello' />
-            <Card title='hello' />
-            <Card title='hello' />
-            <PlusCard onClick={() => setMode("edit")} >+</PlusCard>
-          </ CardContainer > : <Edit />
-      }
-      {
-        mode === "edit" &&
-        <Edit />
-      } */}
       {
         mode === "view" &&
         < CardContainer >
@@ -63,9 +54,7 @@ const App = () => {
         <Edit setMode={setMode} />
       }
     </>
-
   )
-
 }
 
 export default App
