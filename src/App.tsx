@@ -30,7 +30,7 @@ const App = () => {
 
   const [mode, setMode] = useState<'edit' | 'view'>('view')
   const [memoList, setMemoList] = useState<Memo[]>([])
-  const [selectedMemo, setSelectedMemo] = useState<Memo | null>(null)
+  const [selectedMemoIdx, setSelectedMemoIdx] = useState<number | null>(null)
 
   useEffect(() => {
     const memo = JSON.parse((Cookies.get('memo') ?? null)!)
@@ -44,7 +44,12 @@ const App = () => {
         mode === "view" &&
         < CardContainer >
           {
-            memoList.map(memo => <Card title={memo.title} />)
+            memoList.map((memo, idx) => <Card
+              onClick={() => {
+                setSelectedMemoIdx(idx)
+                setMode('edit')
+              }}
+              title={memo.title} />)
           }
           <PlusCard onClick={() => setMode("edit")} >+</PlusCard>
         </ CardContainer >

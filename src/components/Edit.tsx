@@ -21,9 +21,10 @@ const ButtionContainer = styled.div`
 `
 interface EditProps {
     setMode: (mode: 'edit' | 'view') => void;
+    memoIdx?: number
 }
 
-const Edit = ({ setMode }: EditProps) => {
+const Edit = ({ setMode, memoIdx }: EditProps) => {
     const [contents, setContents] = useState('')
     const [title, setTitle] = useState('')
 

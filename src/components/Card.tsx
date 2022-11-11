@@ -14,10 +14,11 @@ const CardContainer = styled.div`
 
 interface CardProps {
     title: string;
+    onClick: () => void;
 }
-const Card = ({ title }: CardProps) => {
+const Card = ({ title, onClick }: CardProps) => {
 
-    return (<CardContainer >
+    return (<CardContainer onClick={onClick}>
         {title}
     </CardContainer>)
 }
