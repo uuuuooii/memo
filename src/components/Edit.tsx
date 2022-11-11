@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "@emotion/styled";
 import Button from "./Button";
 import Cookies from "js-cookie";
+import Memo from "../interfaces/Memo";
 
 const TitleInput = styled.input`
 `
@@ -21,12 +22,26 @@ const ButtionContainer = styled.div`
 `
 interface EditProps {
     setMode: (mode: 'edit' | 'view') => void;
-    memoIdx?: number
+    memoIdx: number | null;
 }
 
 const Edit = ({ setMode, memoIdx }: EditProps) => {
-    const [contents, setContents] = useState('')
-    const [title, setTitle] = useState('')
+    const [title, setTitle] = useState(() => {
+        if (Number.isInteger(memoIdx)) {
+            const memo = JSON.parse((Cookies.get('memo') ?? null)!)
+            const memoList: Memo[] = memo ?? []
+            return memoList[memoIdx as number].title
+        }
+        return ''
+    })
+    const [contents, setContents] = useState(() => {
+        if (Number.isInteger(memoIdx)) {
+            const memo = JSON.parse((Cookies.get('memo') ?? null)!)
+            const memoList: Memo[] = memo ?? []
+            return memoList[memoIdx as number].contents
+        }
+        return ''
+    })
 
     return (< >
         <EditContainer >
@@ -36,7 +51,7 @@ const Edit = ({ setMode, memoIdx }: EditProps) => {
             <ButtionContainer>
                 <Button onClick={() => setMode("view")}>뒤로가기</Button>
                 <Button onClick={() => {
-                    if (!(title.length && contents.length)) {
+                    if (!(title.length && contents!.length)) {
                         alert("제목과 내용을 적어주세요.")
                         return;
                     }
@@ -44,10 +59,16 @@ const Edit = ({ setMode, memoIdx }: EditProps) => {
                     const memo = JSON.parse((Cookies.get('memo') ?? null)!)
                     const memoList = memo ?? [];
 
-                    memoList.push({
-                        title,
-                        contents
-                    })
+                    if (Number.isInteger(memoIdx))
+                        memoList[memoIdx as number] = {
+                            title,
+                            contents
+                        }
+                    else
+                        memoList.push({
+                            title,
+                            contents
+                        })
 
                     Cookies.set('memo', JSON.stringify(memoList))
                     alert('저장 되었습니다')

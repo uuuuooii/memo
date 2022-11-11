@@ -45,18 +45,27 @@ const App = () => {
         < CardContainer >
           {
             memoList.map((memo, idx) => <Card
+              key={idx}
               onClick={() => {
                 setSelectedMemoIdx(idx)
                 setMode('edit')
               }}
               title={memo.title} />)
           }
-          <PlusCard onClick={() => setMode("edit")} >+</PlusCard>
+          <PlusCard onClick={() => {
+            setSelectedMemoIdx(null)
+            setMode("edit")
+          }} >+</PlusCard>
+          <PlusCard onClick={() => {
+            setSelectedMemoIdx(null)
+            setMemoList([])
+            Cookies.remove('memo')
+          }} >x</PlusCard>
         </ CardContainer >
       }
       {
         mode === "edit" &&
-        <Edit setMode={setMode} />
+        <Edit setMode={setMode} memoIdx={selectedMemoIdx} />
       }
     </>
   )
