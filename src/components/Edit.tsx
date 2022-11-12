@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import Button from "./Button";
 import Cookies from "js-cookie";
 import Memo from "../interfaces/Memo";
+import useMemo from "../store/memoStore";
 
 const TitleInput = styled.input`
 `
@@ -22,23 +23,26 @@ const ButtionContainer = styled.div`
 `
 interface EditProps {
     setMode: (mode: 'edit' | 'view') => void;
-    memoIdx: number | null;
+    // memoIdx: number | null;
 }
 
-const Edit = ({ setMode, memoIdx }: EditProps) => {
+const Edit = ({ setMode }: EditProps) => {
+    const { selectedIdx, editMemo, addMemoList, memoList } = useMemo()
+
+
     const [title, setTitle] = useState(() => {
-        if (Number.isInteger(memoIdx)) {
-            const memo = JSON.parse((Cookies.get('memo') ?? null)!)
-            const memoList: Memo[] = memo ?? []
-            return memoList[memoIdx as number].title
+        if (Number.isInteger(selectedIdx)) {
+            // const memo = JSON.parse((Cookies.get('memo') ?? null)!)
+            // const memoList: Memo[] = memo ?? []
+            return memoList[selectedIdx as number].title
         }
         return ''
     })
     const [contents, setContents] = useState(() => {
-        if (Number.isInteger(memoIdx)) {
-            const memo = JSON.parse((Cookies.get('memo') ?? null)!)
-            const memoList: Memo[] = memo ?? []
-            return memoList[memoIdx as number].contents
+        if (Number.isInteger(selectedIdx)) {
+            // const memo = JSON.parse((Cookies.get('memo') ?? null)!)
+            // const memoList: Memo[] = memo ?? []
+            return memoList[selectedIdx as number].contents
         }
         return ''
     })
@@ -56,21 +60,26 @@ const Edit = ({ setMode, memoIdx }: EditProps) => {
                         return;
                     }
 
-                    const memo = JSON.parse((Cookies.get('memo') ?? null)!)
-                    const memoList = memo ?? [];
+                    // const memo = JSON.parse((Cookies.get('memo') ?? null)!)
+                    // const memoList = memo ?? [];
+                    const memo = {
+                        title, contents
+                    }
 
-                    if (Number.isInteger(memoIdx))
-                        memoList[memoIdx as number] = {
-                            title,
-                            contents
-                        }
+                    if (Number.isInteger(selectedIdx))
+                        editMemo(selectedIdx as number, memo)
+                    // memoList[selectedIndex as number] = {
+                    //     title,
+                    //     contents
+                    // }
                     else
-                        memoList.push({
-                            title,
-                            contents
-                        })
+                        addMemoList(memo)
+                    // memoList.push({
+                    //     title,
+                    //     contents
+                    // })
 
-                    Cookies.set('memo', JSON.stringify(memoList))
+                    // Cookies.set('memo', JSON.stringify(memoList))
                     alert('저장 되었습니다')
                     setMode("view")
                 }

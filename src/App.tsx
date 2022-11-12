@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Card from "./components/Card";
 import Edit from "./components/Edit";
 import Memo from "./interfaces/Memo";
+import useMemo from "./store/memoStore";
 
 const CardContainer = styled.div`
   display: flex;
@@ -26,17 +27,27 @@ const PlusCard = styled.div`
 `
 
 const App = () => {
-  console.log(Cookies.get('memo'))
-
   const [mode, setMode] = useState<'edit' | 'view'>('view')
-  const [memoList, setMemoList] = useState<Memo[]>([])
-  const [selectedMemoIdx, setSelectedMemoIdx] = useState<number | null>(null)
+  // const [memoList, setMemoList] = useState<Memo[]>([])
 
-  useEffect(() => {
-    const memo = JSON.parse((Cookies.get('memo') ?? null)!)
-    const memoList: Memo[] = memo ?? [];
-    setMemoList(memoList)
-  }, [mode])
+  const { setSelectedIdx, memoList, clear } = useMemo();
+  // const [selectedMemoIdx, setSelectedMemoIdx] = useState<number | null>(null)
+
+
+  // cookie
+  // useEffect(() => {
+  //   const memo = JSON.parse((Cookies.get('memo') ?? null)!)
+  //   const memoList: Memo[] = memo ?? [];
+  //   setMemoList(memoList)
+  // }, [mode])
+
+  // local
+  // useEffect(() => {
+  //   const memo = JSON.parse((localStorage.getItem('memo') ?? null)!)
+  //   const memoList: Memo[] = memo ?? [];
+  //   setMemoList(memoList)
+  // }, [mode])
+
 
   return (
     <>
@@ -47,25 +58,27 @@ const App = () => {
             memoList.map((memo, idx) => <Card
               key={idx}
               onClick={() => {
-                setSelectedMemoIdx(idx)
+                setSelectedIdx(idx)
                 setMode('edit')
               }}
               title={memo.title} />)
           }
           <PlusCard onClick={() => {
-            setSelectedMemoIdx(null)
+            setSelectedIdx(null)
             setMode("edit")
           }} >+</PlusCard>
           <PlusCard onClick={() => {
-            setSelectedMemoIdx(null)
-            setMemoList([])
-            Cookies.remove('memo')
+            setSelectedIdx(null)
+            clear()
+            // setMemoList([])
+            // Cookies.remove('memo')
           }} >x</PlusCard>
         </ CardContainer >
       }
       {
         mode === "edit" &&
-        <Edit setMode={setMode} memoIdx={selectedMemoIdx} />
+        // <Edit setMode={setMode} memoIdx={selectedMemoIdx} />
+        <Edit setMode={setMode} />
       }
     </>
   )
